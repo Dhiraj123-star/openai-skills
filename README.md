@@ -8,18 +8,36 @@ This project demonstrates the complete workflow:
 * List skills
 * Use a skill with the Responses API
 * Delete a skill
+* Automatically clean up duplicate skills
+* Organize code using a production-style structure
 
 ---
 
 # 📁 Project Structure
 
-```text id="pqk9ea"
+```text
 openai-skills/
-├── main.py              # Full workflow: create → list → use → delete skill
-├── SKILL.md             # Custom skill definition
+├── main.py
 ├── requirements.txt
-├── README.md
-└── venv/
+├── .env
+│
+├── config/
+│   └── settings.py
+│
+├── data/
+│   └── sample_data.py
+│
+├── services/
+│   ├── skill_service.py
+│   └── response_service.py
+│
+├── utils/
+│   └── logger.py
+│
+├── my_skill/
+│   └── SKILL.md
+│
+└── README.md
 ```
 
 ---
@@ -28,7 +46,7 @@ openai-skills/
 
 ## 1. Create Virtual Environment
 
-```bash id="j0l5l1"
+```bash
 python3 -m venv venv
 ```
 
@@ -36,13 +54,13 @@ python3 -m venv venv
 
 Linux/macOS:
 
-```bash id="n7h2ul"
+```bash
 source venv/bin/activate
 ```
 
 Windows (PowerShell):
 
-```powershell id="grg85m"
+```powershell
 venv\Scripts\activate
 ```
 
@@ -50,92 +68,88 @@ venv\Scripts\activate
 
 ## 3. Install Dependencies
 
-```bash id="i3n0uh"
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 4. Set Your OpenAI API Key
+## 4. Create `.env`
 
-Linux/macOS:
-
-```bash id="n9tw8o"
-export OPENAI_API_KEY=sk-your-key-here
-```
-
-Windows (PowerShell):
-
-```powershell id="t3b1h9"
-setx OPENAI_API_KEY "sk-your-key-here"
+```env
+OPENAI_API_KEY=sk-your-openai-api-key
 ```
 
 ---
 
 ## 5. Run the Project
 
-```bash id="7h2o0u"
+```bash
 python main.py
 ```
 
 ---
 
-# 🔄 What the Script Does
+# 🔄 Workflow
 
-| Step | Action                                                      |
-| ---- | ----------------------------------------------------------- |
-| 1    | Uploads `SKILL.md` using the OpenAI Skills API              |
-| 2    | Lists all available skills                                  |
-| 3    | Uses the uploaded skill with the Responses API + shell tool |
-| 4    | Deletes the uploaded skill for cleanup                      |
+| Step | Action                                      |
+| ---- | ------------------------------------------- |
+| 1    | Delete previously uploaded duplicate skills |
+| 2    | Upload a fresh custom skill                 |
+| 3    | Wait for skill propagation                  |
+| 4    | Retrieve and verify the uploaded skill      |
+| 5    | List available skills                       |
+| 6    | Use the skill with GPT-5.2 + Shell Tool     |
+| 7    | Delete the uploaded skill                   |
+| 8    | Verify cleanup                              |
 
 ---
 
 # 📦 Upload a Skill
 
-```python id="u2k4lk"
-from openai import OpenAI
-
-client = OpenAI()
-
-with open("SKILL.md", "rb") as f:
+```python
+with open("my_skill/SKILL.md", "rb") as f:
     skill = client.skills.create(
-        files=[("SKILL.md", f, "text/markdown")]
+        files=[
+            (
+                "my_skill/SKILL.md",
+                f,
+                "text/markdown",
+            )
+        ]
     )
-
-print(skill.id)
 ```
 
 ---
 
 # ⚡ Use the Skill with Responses API
 
-```python id="x6s7mg"
+```python
 response = client.responses.create(
-    model="gpt-4o",
-    tools=[{
-        "type": "shell",
-        "environment": {
-            "type": "container_auto",
-            "skills": [
-                {
-                    "type": "skill_reference",
-                    "id": skill_id
-                }
-            ]
+    model="gpt-5.2",
+    input="Analyze this sales data...",
+    tools=[
+        {
+            "type": "shell",
+            "environment": {
+                "type": "container_auto",
+                "skills": [
+                    {
+                        "type": "skill_reference",
+                        "skill_id": skill_id,
+                    }
+                ],
+            },
         }
-    }],
-    input="Analyze this data..."
+    ],
 )
-
-print(response.output_text)
 ```
 
 ---
 
-# 🗑️ Delete the Skill
+# 🗑️ Delete a Skill
 
-```python id="c8whs4"
+```python
 client.skills.delete(skill_id)
 ```
 
@@ -144,22 +158,26 @@ client.skills.delete(skill_id)
 # 📌 Key Features
 
 * Uses the official OpenAI Python SDK
-* Demonstrates OpenAI Skills API workflow
-* Uses Responses API with shell tool execution
+* Demonstrates the complete OpenAI Skills API workflow
+* Uses GPT-5.2 with the Shell Tool
 * Supports reusable `SKILL.md` definitions
-* Minimal and beginner-friendly implementation
-* Great starting point for AI agent workflows
+* Automatic duplicate skill cleanup
+* Modular service-based architecture
+* Environment variable management with `python-dotenv`
+* Production-style project structure
+* Easy to extend for FastAPI and AI Agent projects
 
 ---
 
 # 📦 requirements.txt
 
-```txt id="3npq2u"
-openai>=1.0.0
+```txt
+openai>=2.0.0
+python-dotenv>=1.0.0
 ```
 
 ---
 
 # 🔑 Get an OpenAI API Key
 
-[OpenAI Platform API Keys](https://platform.openai.com/api-keys?utm_source=chatgpt.com)
+https://platform.openai.com/api-keys
