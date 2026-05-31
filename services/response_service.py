@@ -1,13 +1,16 @@
 from config.settings import MODEL_NAME
 
-def analyze_sales_data(client,skill_id,sample_data):
+def analyze_data(client,
+                skill_id:str,
+                sales_data:str):
+    
     response = client.responses.create(
         model= MODEL_NAME,
         input = f"""
 Analyze the following sales dataset
 and provide useful business insights:
 
-{sample_data}
+{sales_data}
 """,
 tools =[
     {
@@ -26,4 +29,4 @@ tools =[
     
     )
 
-    return response
+    return response.output_text
