@@ -1,15 +1,17 @@
-# 🤖 OpenAI Skills API — Python Project
+# 🤖 OpenAI Skills API + FastAPI
 
-A complete Python demo of the **OpenAI Skills API**.
+A production-style Python project demonstrating the **OpenAI Skills API** integrated with **FastAPI**.
 
-This project demonstrates the complete workflow:
+This project showcases:
 
-* Create a skill
-* List skills
-* Use a skill with the Responses API
-* Delete a skill
+* Create a custom skill
+* Upload and manage skills
+* Use skills with the Responses API
+* Analyze data using GPT-5.2 + Shell Tool
 * Automatically clean up duplicate skills
-* Organize code using a production-style structure
+* FastAPI REST API integration
+* Modular service-based architecture
+* Environment-based configuration
 
 ---
 
@@ -17,9 +19,10 @@ This project demonstrates the complete workflow:
 
 ```text
 openai-skills/
-├── main.py
-├── requirements.txt
-├── .env
+├── app/
+│   ├── main.py
+│   ├── schemas.py
+│   └── dependencies.py
 │
 ├── config/
 │   └── settings.py
@@ -37,8 +40,24 @@ openai-skills/
 ├── my_skill/
 │   └── SKILL.md
 │
+├── .env
+├── requirements.txt
 └── README.md
 ```
+
+---
+
+# 🚀 Features
+
+* OpenAI Skills API integration
+* GPT-5.2 Shell Tool execution
+* FastAPI REST endpoints
+* Automatic skill lifecycle management
+* Duplicate skill cleanup
+* Modular service architecture
+* Environment variable configuration
+* Swagger UI documentation
+* Easy extension for AI agent workflows
 
 ---
 
@@ -58,7 +77,7 @@ Linux/macOS:
 source venv/bin/activate
 ```
 
-Windows (PowerShell):
+Windows:
 
 ```powershell
 venv\Scripts\activate
@@ -82,98 +101,107 @@ OPENAI_API_KEY=sk-your-openai-api-key
 
 ---
 
-## 5. Run the Project
+## 5. Start FastAPI
 
 ```bash
-python main.py
+uvicorn app.main:app --reload
 ```
 
 ---
 
-# 🔄 Workflow
+# 📖 API Documentation
 
-| Step | Action                                      |
-| ---- | ------------------------------------------- |
-| 1    | Delete previously uploaded duplicate skills |
-| 2    | Upload a fresh custom skill                 |
-| 3    | Wait for skill propagation                  |
-| 4    | Retrieve and verify the uploaded skill      |
-| 5    | List available skills                       |
-| 6    | Use the skill with GPT-5.2 + Shell Tool     |
-| 7    | Delete the uploaded skill                   |
-| 8    | Verify cleanup                              |
+Swagger UI:
 
----
+```text
+http://localhost:8000/docs
+```
 
-# 📦 Upload a Skill
+ReDoc:
 
-```python
-with open("my_skill/SKILL.md", "rb") as f:
-    skill = client.skills.create(
-        files=[
-            (
-                "my_skill/SKILL.md",
-                f,
-                "text/markdown",
-            )
-        ]
-    )
+```text
+http://localhost:8000/redoc
 ```
 
 ---
 
-# ⚡ Use the Skill with Responses API
+# 🔄 API Workflow
 
-```python
-response = client.responses.create(
-    model="gpt-5.2",
-    input="Analyze this sales data...",
-    tools=[
-        {
-            "type": "shell",
-            "environment": {
-                "type": "container_auto",
-                "skills": [
-                    {
-                        "type": "skill_reference",
-                        "skill_id": skill_id,
-                    }
-                ],
-            },
-        }
-    ],
-)
+| Step | Action                     |
+| ---- | -------------------------- |
+| 1    | Receive sales data via API |
+| 2    | Upload custom skill        |
+| 3    | Wait for skill propagation |
+| 4    | Execute GPT-5.2 analysis   |
+| 5    | Return business insights   |
+| 6    | Delete uploaded skill      |
+| 7    | Return structured response |
+
+---
+
+# 📡 Endpoints
+
+## Health Check
+
+```http
+GET /
+```
+
+Response:
+
+```json
+{
+  "status": "healthy",
+  "service": "OpenAI Skills API"
+}
 ```
 
 ---
 
-# 🗑️ Delete a Skill
+## Analyze Sales Data
 
-```python
-client.skills.delete(skill_id)
+```http
+POST /analyze
+```
+
+Request:
+
+```json
+{
+  "sales_data": "January: 1000\nFebruary: 2000\nMarch: 3000"
+}
+```
+
+Response:
+
+```json
+{
+  "result": "Sales increased steadily from January to March..."
+}
 ```
 
 ---
 
-# 📌 Key Features
+# 📌 Key Technologies
 
-* Uses the official OpenAI Python SDK
-* Demonstrates the complete OpenAI Skills API workflow
-* Uses GPT-5.2 with the Shell Tool
-* Supports reusable `SKILL.md` definitions
-* Automatic duplicate skill cleanup
-* Modular service-based architecture
-* Environment variable management with `python-dotenv`
-* Production-style project structure
-* Easy to extend for FastAPI and AI Agent projects
+* FastAPI
+* OpenAI Python SDK
+* OpenAI Skills API
+* GPT-5.2
+* Shell Tool
+* Python Dotenv
+* Pydantic
 
 ---
 
 # 📦 requirements.txt
 
 ```txt
+fastapi
+uvicorn[standard]
 openai>=2.0.0
 python-dotenv>=1.0.0
+pydantic
 ```
 
 ---
