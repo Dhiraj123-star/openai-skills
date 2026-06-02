@@ -1,10 +1,17 @@
 from config.settings import MODEL_NAME
+from tenacity import retry
+from tenacity import stop_after_attempt
+from tenacity import wait_exponential
 
-def analyze_data(client,
+@retry(
+    stop= stop_after_attempt(3),
+    wait= wait_exponential(min=2,max=10)
+)
+async def analyze_data(client,
                 skill_id:str,
                 sales_data:str):
     
-    response = client.responses.create(
+    response = await client.responses.create(
         model= MODEL_NAME,
         input = f"""
 Analyze the following sales dataset
