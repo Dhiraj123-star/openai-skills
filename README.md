@@ -4,14 +4,15 @@ A production-style Python project demonstrating the **OpenAI Skills API** integr
 
 This project showcases:
 
-* Create a custom skill
-* Upload and manage skills
-* Use skills with the Responses API
+* Create and manage custom skills
+* Use OpenAI Skills with the Responses API
 * Analyze data using GPT-5.2 + Shell Tool
-* Automatically clean up duplicate skills
 * FastAPI REST API integration
-* Modular service-based architecture
+* Async OpenAI SDK support
+* Structured logging
+* Automatic retry handling
 * Environment-based configuration
+* Modular service architecture
 
 ---
 
@@ -52,12 +53,14 @@ openai-skills/
 * OpenAI Skills API integration
 * GPT-5.2 Shell Tool execution
 * FastAPI REST endpoints
-* Automatic skill lifecycle management
+* Async OpenAI SDK support
+* Structured logging
+* Automatic retry handling with exponential backoff
+* Skill lifecycle management
 * Duplicate skill cleanup
-* Modular service architecture
 * Environment variable configuration
 * Swagger UI documentation
-* Easy extension for AI agent workflows
+* Production-ready service architecture
 
 ---
 
@@ -182,6 +185,28 @@ Response:
 
 ---
 
+# 🏗️ Production Features
+
+## Async Support
+
+* Uses `AsyncOpenAI`
+* Async FastAPI endpoints
+* Improved concurrency and throughput
+
+## Structured Logging
+
+* Centralized logging utility
+* Consistent log formatting
+* Better observability and debugging
+
+## Retry Handling
+
+* Powered by Tenacity
+* Automatic retries for transient failures
+* Exponential backoff strategy
+
+---
+
 # 📌 Key Technologies
 
 * FastAPI
@@ -191,6 +216,7 @@ Response:
 * Shell Tool
 * Python Dotenv
 * Pydantic
+* Tenacity
 
 ---
 
@@ -202,6 +228,7 @@ uvicorn[standard]
 openai>=2.0.0
 python-dotenv>=1.0.0
 pydantic
+tenacity
 ```
 
 ---
