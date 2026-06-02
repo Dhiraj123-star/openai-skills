@@ -1,4 +1,4 @@
-import time
+import asyncio
 
 from config.settings import (
     SKILL_FILE_PATH,
@@ -38,10 +38,10 @@ async def upload_skill(client):
     logger.info(
         f"Skill uploaded: {skill.id}"
     )
-    time.sleep(SKILL_PROPAGATION_WAIT)
+    await asyncio.sleep(SKILL_PROPAGATION_WAIT)
 
     return skill
 
 
-def delete_skill(client, skill_id):
-    client.skills.delete(skill_id)
+async def delete_skill(client, skill_id):
+    await client.skills.delete(skill_id)
