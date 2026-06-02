@@ -32,7 +32,7 @@ def health_check():
     "/analyze",
     response_model=AnalyzeResponse,
 )
-def analyze(
+async def analyze(
     request: AnalyzeRequest,
 ):
     client= get_openai_client()
@@ -41,10 +41,10 @@ def analyze(
 
     try:
         # upload skill
-        skill = upload_skill(client)
+        skill = await upload_skill(client)
 
         # Analyze data
-        result = analyze_data(
+        result = await analyze_data(
             client = client,
             skill_id = skill.id,
             sales_data = request.sales_data,
@@ -62,7 +62,7 @@ def analyze(
     finally:
         if skill:
             try:
-                delete_skill(
+                await delete_skill(
                     client,
                     skill.id,
                 )
