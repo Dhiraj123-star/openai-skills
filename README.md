@@ -54,6 +54,10 @@ openai-skills/
 * GPT-5.2 Shell Tool execution
 * FastAPI REST endpoints
 * Async OpenAI SDK support
+* Connection pooling with single reuse of `AsyncOpenAI` client
+* Request timeout configuration
+* Fail-fast startup validation for `OPENAI_API_KEY`
+* Payload size security limiting on API inputs
 * Structured logging
 * Automatic retry handling with exponential backoff
 * Skill lifecycle management
@@ -186,6 +190,21 @@ Response:
 ---
 
 # 🏗️ Production Features
+
+## Performance & Connection Pooling
+
+* Reuses a single `AsyncOpenAI` client instance across the application lifecycle to enable HTTP connection pooling.
+* Enforces a 60-second request timeout on all OpenAI calls to prevent requests from hanging indefinitely.
+
+## Fail-Fast Validation
+
+* Validates the presence of `OPENAI_API_KEY` at startup time.
+* Immediately raises a `ValueError` if the key is missing or empty, avoiding late-stage runtime failures during requests.
+
+## Payload Security
+
+* Restricts the `sales_data` string input length to a maximum of 10,000 characters.
+* Mitigates potential resource exhaustion and payload abuse vectors.
 
 ## Async Support
 
