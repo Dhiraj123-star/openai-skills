@@ -116,6 +116,38 @@ uvicorn app.main:app --reload
 
 ---
 
+## 🐳 Run with Docker (Alternative)
+
+Ensure you have Docker and Docker Compose installed, and your `.env` file is set up with your `OPENAI_API_KEY`.
+
+### Build and Start Containers
+
+To build the image and run the application in the background:
+
+```bash
+docker compose up -d --build
+```
+
+The application will be running at `http://localhost:8000`.
+
+### View Logs
+
+To stream the service logs:
+
+```bash
+docker compose logs -f
+```
+
+### Stop Containers
+
+To shut down the running containers:
+
+```bash
+docker compose down
+```
+
+---
+
 # 📖 API Documentation
 
 Swagger UI:
