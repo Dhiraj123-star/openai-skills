@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import (
     AnalyzeRequest,
@@ -19,7 +20,17 @@ from services.response_service import (
 app = FastAPI(
     title="OpenAI Skills API",
     version="1.0.0",
+    servers=[{"url": "http://localhost", "description": "Local"}],
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def health_check():
@@ -35,30 +46,28 @@ def health_check():
 async def analyze(
     request: AnalyzeRequest,
 ):
-    client= get_openai_client()
+    client = get_openai_client()
 
     skill = None
 
     try:
-        # upload skill
         skill = await upload_skill(client)
 
-        # Analyze data
         result = await analyze_data(
-            client = client,
-            skill_id = skill.id,
-            sales_data = request.sales_data,
+            client=client,
+            skill_id=skill.id,
+            sales_data=request.sales_data,
         )
 
         return AnalyzeResponse(
             result=result,
         )
     except Exception as exc:
-        raise HTTPException (
-            status_code = 500,
-            detail = str(exc),
+        raise HTTPException(
+            status_code=500,
+            detail=str(exc),
         )
-    
+
     finally:
         if skill:
             try:
