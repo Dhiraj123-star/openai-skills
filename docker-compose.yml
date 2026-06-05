@@ -4,12 +4,23 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: openai-skills-api
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     env_file:
       - .env
     volumes:
       - .:/app
     # Use reload flag in compose for active development
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    container_name: openai-skills-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
     restart: always
