@@ -128,7 +128,7 @@ To build the image and run the application in the background:
 docker compose up -d --build
 ```
 
-The application will be running at `http://localhost:8000`.
+The application will be running at `http://localhost`.
 
 ### View Logs
 
@@ -150,13 +150,25 @@ docker compose down
 
 # 📖 API Documentation
 
-Swagger UI:
+Swagger UI (Docker/Nginx):
+
+```text
+http://localhost/docs
+```
+
+Or when running locally without Docker:
 
 ```text
 http://localhost:8000/docs
 ```
 
-ReDoc:
+ReDoc (Docker/Nginx):
+
+```text
+http://localhost/redoc
+```
+
+Or when running locally without Docker:
 
 ```text
 http://localhost:8000/redoc
