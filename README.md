@@ -146,6 +146,44 @@ To shut down the running containers:
 docker compose down
 ```
 
+### 🔒 Adding Local SSL Certificates (HTTPS)
+
+To run the Docker setup with local SSL certificates (enabling `https://localhost`), follow these steps:
+
+1. **Generate Certificates**: Create a directory named `nginx/certs` and generate the certificate files.
+   * Using `mkcert` (Recommended for browser trust):
+     ```bash
+     mkdir -p nginx/certs
+     mkcert -key-file nginx/certs/localhost-key.pem -cert-file nginx/certs/localhost.pem localhost 127.0.0.1 ::1
+     ```
+   * Using `openssl` (Self-signed):
+     ```bash
+     mkdir -p nginx/certs
+     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+       -keyout nginx/certs/localhost-key.pem \
+       -out nginx/certs/localhost.pem \
+       -subj "/CN=localhost"
+     ```
+
+2. **Configure Nginx**: Update [nginx/default.conf](file:///home/dhiraj-kumar/Desktop/Projects/openai-skills/nginx/default.conf) to support SSL on port `443` and map the certificate files. For details, refer to the [local_ssl_guide.md](file:///home/dhiraj-kumar/.gemini/antigravity-cli/brain/b5839594-4352-45f3-9f09-ce4e940f67fa/local_ssl_guide.md).
+
+3. **Configure Docker Compose**: Expose port `443` and map the certificate directory in [docker-compose.yml](file:///home/dhiraj-kumar/Desktop/Projects/openai-skills/docker-compose.yml):
+   ```yaml
+     nginx:
+       ports:
+         - "80:80"
+         - "443:443"
+       volumes:
+         - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+         - ./nginx/certs:/etc/nginx/certs:ro
+   ```
+
+4. **Restart the Stack**:
+   ```bash
+   docker compose down
+   docker compose up -d
+   ```
+
 ---
 
 # 📖 API Documentation
