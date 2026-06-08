@@ -1,18 +1,13 @@
 services:
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${DOCKERHUB_USERNAME}/openai-skills:latest
     container_name: openai-skills-api
     expose:
       - "8000"
     env_file:
       - .env
-    volumes:
-      - .:/app
-    # Use reload flag in compose for active development
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: always
+
 
   nginx:
     image: nginx:alpine
