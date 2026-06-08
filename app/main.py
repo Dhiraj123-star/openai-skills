@@ -20,13 +20,12 @@ from services.response_service import (
 app = FastAPI(
     title="OpenAI Skills API",
     version="1.0.0",
-    servers=[{"url": "http://localhost", "description": "Local"}],
 )
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
