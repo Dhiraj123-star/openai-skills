@@ -337,3 +337,37 @@ tenacity
 # 🔑 Get an OpenAI API Key
 
 https://platform.openai.com/api-keys
+
+---
+
+# 🔄 CI/CD Pipeline (GitHub Actions)
+
+This project includes a automated CI/CD pipeline configuration using GitHub Actions to build and push the Docker image to DockerHub.
+
+The workflow is defined in [.github/workflows/deploy.yml](file:///home/dhiraj-kumar/Desktop/Projects/openai-skills/.github/workflows/deploy.yml).
+
+### 🛠️ How to Configure
+
+To use this pipeline, follow these steps:
+
+1. **Create DockerHub Repository**:
+   * Log in to [DockerHub](https://hub.docker.com/).
+   * Create a new repository named `openai-skills`.
+
+2. **Generate a Personal Access Token**:
+   * In DockerHub, go to **Account Settings** -> **Security** -> **New Access Token**.
+   * Create a token with read/write access and copy the value.
+
+3. **Configure GitHub Repository Secrets**:
+   * Navigate to your project repository on GitHub.
+   * Go to **Settings** -> **Secrets and variables** -> **Actions**.
+   * Click **New repository secret** and add the following secrets:
+     * `DOCKERHUB_USERNAME`: Your DockerHub username.
+     * `DOCKERHUB_TOKEN`: The Personal Access Token generated in step 2.
+
+### 🚀 Running the Pipeline
+
+The pipeline is triggered automatically on:
+* Any `push` to the `main` branch.
+* It can also be run manually from the **Actions** tab on your GitHub repository.
+
