@@ -118,14 +118,17 @@ uvicorn app.main:app --reload
 
 ## 🐳 Run with Docker (Alternative)
 
-Ensure you have Docker and Docker Compose installed, and your `.env` file is set up with your `OPENAI_API_KEY`.
+Ensure you have Docker and Docker Compose installed, and your `.env` file is set up with:
+* `OPENAI_API_KEY`: Your OpenAI API Key.
+* `DOCKERHUB_USERNAME`: Your DockerHub username (used to pull the image).
 
-### Build and Start Containers
+### Pull and Start Containers
 
-To build the image and run the application in the background:
+To pull the latest image from DockerHub and run the application in the background:
 
 ```bash
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 ```
 
 The application will be running at `http://localhost`.
